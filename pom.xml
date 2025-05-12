@@ -10,6 +10,7 @@
 	</parent>
 	<groupId>com.lms</groupId>
 	<artifactId>service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>manual</name>
 	<description>library management system implementation without using any AI tool</description>
 	<url/>
