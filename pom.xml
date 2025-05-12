@@ -10,9 +10,8 @@
 	</parent>
 	<groupId>com.lms</groupId>
 	<artifactId>service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>libraryTests</name>
-	<description>library management system</description>
+	<name>manual</name>
+	<description>library management system implementation without using any AI tool</description>
 	<url/>
 	<licenses>
 		<license/>
