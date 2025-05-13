@@ -7,7 +7,6 @@ import java.util.UUID
 
 @Repository
 interface BookRepository : JpaRepository<Book, UUID> {
-
     fun findByTitleContainingIgnoreCase(title: String): List<Book>
 
     fun findByAuthorContainingIgnoreCase(author: String): List<Book>
@@ -17,21 +16,21 @@ interface BookRepository : JpaRepository<Book, UUID> {
     fun findByTitleContainingIgnoreCaseAndAuthorContainingIgnoreCaseAndAvailable(
         title: String,
         author: String,
-        available: Boolean
+        available: Boolean,
     ): List<Book>
 
     fun findByTitleContainingIgnoreCaseAndAuthorContainingIgnoreCase(
         title: String,
-        author: String
+        author: String,
     ): List<Book>
 
     fun findByTitleContainingIgnoreCaseAndAvailable(
         title: String,
-        available: Boolean
+        available: Boolean,
     ): List<Book>
 
     fun findByAuthorContainingIgnoreCaseAndAvailable(
         author: String,
-        available: Boolean
+        available: Boolean,
     ): List<Book>
 }

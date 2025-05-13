@@ -15,9 +15,8 @@ import java.util.UUID
 @RestController
 @RequestMapping("/api/books")
 class BookController(
-    private val bookService: BookService
+    private val bookService: BookService,
 ) {
-
     /**
      * Handles POST requests to add a new book.
      * Endpoint: POST /api/books
@@ -27,9 +26,9 @@ class BookController(
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun addBook(@Valid @RequestBody book: Book): Book {
-        return bookService.addBook(book)
-    }
+    fun addBook(
+        @Valid @RequestBody book: Book,
+    ): Book = bookService.addBook(book)
 
     /**
      * Handles GET requests to retrieve a specific book by its ID.
@@ -39,7 +38,9 @@ class BookController(
      * Returns HTTP 200 (OK) on success, 404 (Not Found) if not found.
      */
     @GetMapping("/{id}")
-    fun getBookById(@PathVariable id: UUID): Book {
+    fun getBookById(
+        @PathVariable id: UUID,
+    ): Book {
         return bookService.getBookById(id)
         // ResourceNotFoundException -> 404 handled by @ResponseStatus on exception
     }
@@ -51,9 +52,7 @@ class BookController(
      * Returns HTTP 200 (OK).
      */
     @GetMapping
-    fun getAllBooks(): List<Book> {
-        return bookService.getAllBooks()
-    }
+    fun getAllBooks(): List<Book> = bookService.getAllBooks()
 
     /**
      * Handles PUT requests to update an existing book.
@@ -64,9 +63,10 @@ class BookController(
      * Returns HTTP 200 (OK) on success, 404 (Not Found) if not found.
      */
     @PutMapping("/{id}")
-    fun updateBook(@PathVariable id: UUID, @Valid @RequestBody updatedDetails: Book): Book {
-        return bookService.updateBook(id, updatedDetails)
-    }
+    fun updateBook(
+        @PathVariable id: UUID,
+        @Valid @RequestBody updatedDetails: Book,
+    ): Book = bookService.updateBook(id, updatedDetails)
 
     /**
      * Handles DELETE requests to delete a book by its ID.
@@ -76,7 +76,9 @@ class BookController(
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteBookById(@PathVariable id: UUID) {
+    fun deleteBookById(
+        @PathVariable id: UUID,
+    ) {
         bookService.deleteBookById(id)
     }
 
@@ -93,10 +95,8 @@ class BookController(
     fun searchBooks(
         @RequestParam(required = false) title: String?,
         @RequestParam(required = false) author: String?,
-        @RequestParam(required = false) available: Boolean?
-    ): List<Book> {
-        return bookService.searchBooks(title, author, available)
-    }
+        @RequestParam(required = false) available: Boolean?,
+    ): List<Book> = bookService.searchBooks(title, author, available)
 
     /**
      * Handles POST requests to borrow a book.
@@ -109,9 +109,10 @@ class BookController(
      * Returns 409 (Conflict) if book not available or user limit reached.
      */
     @PostMapping("/{bookId}/borrow")
-    fun borrowBook(@PathVariable bookId: UUID, @RequestParam userId: UUID): Book {
-        return bookService.borrowBook(bookId, userId)
-    }
+    fun borrowBook(
+        @PathVariable bookId: UUID,
+        @RequestParam userId: UUID,
+    ): Book = bookService.borrowBook(bookId, userId)
 
     /**
      * Handles POST requests to return a book.
@@ -123,7 +124,7 @@ class BookController(
      * Returns 409 (Conflict) if book already returned/available.
      */
     @PostMapping("/{bookId}/return")
-    fun returnBook(@PathVariable bookId: UUID): Book {
-        return bookService.returnBook(bookId)
-    }
+    fun returnBook(
+        @PathVariable bookId: UUID,
+    ): Book = bookService.returnBook(bookId)
 }

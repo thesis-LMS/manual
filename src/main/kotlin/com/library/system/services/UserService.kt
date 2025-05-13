@@ -12,18 +12,15 @@ import java.util.UUID
  */
 @Service
 class UserService(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
-
     /**
      * Registers a new user in the system.
      * @param user The user object to register (without ID).
      * @return The saved user object with its generated ID.
      */
     @Transactional
-    fun registerUser(user: User): User {
-        return userRepository.save(user)
-    }
+    fun registerUser(user: User): User = userRepository.save(user)
 
     /**
      * Retrieves a user by their unique ID.
@@ -31,11 +28,10 @@ class UserService(
      * @return The found User object.
      * @throws ResourceNotFoundException if no user with the given ID exists.
      */
-    fun getUserById(id: UUID): User {
-        return userRepository.findById(id).orElseThrow {
+    fun getUserById(id: UUID): User =
+        userRepository.findById(id).orElseThrow {
             ResourceNotFoundException("User with ID $id not found")
         }
-    }
 
     /**
      * Updates an existing user's details.
@@ -45,7 +41,10 @@ class UserService(
      * @throws ResourceNotFoundException if no user with the given ID exists.
      */
     @Transactional
-    fun updateUser(id: UUID, updatedDetails: User): User {
+    fun updateUser(
+        id: UUID,
+        updatedDetails: User,
+    ): User {
         val existingUser = getUserById(id)
 
         existingUser.name = updatedDetails.name

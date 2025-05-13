@@ -10,16 +10,26 @@ import org.springframework.web.bind.annotation.ResponseStatus
  */
 
 @ResponseStatus(HttpStatus.NOT_FOUND) // 404
-class ResourceNotFoundException(message: String) : RuntimeException(message)
+class ResourceNotFoundException(
+    message: String,
+) : RuntimeException(message)
 
 @ResponseStatus(HttpStatus.CONFLICT) // 409
-class BookNotAvailableException(message: String) : RuntimeException(message)
+class BookNotAvailableException(
+    message: String,
+) : RuntimeException(message)
 
 @ResponseStatus(HttpStatus.CONFLICT) // 409
-class BookAlreadyReturnedException(message: String) : RuntimeException(message)
+class BookAlreadyReturnedException(
+    message: String,
+) : RuntimeException(message)
 
 @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
-class InvalidInputException(message: String) : RuntimeException(message)
+class InvalidInputException(
+    message: String,
+) : RuntimeException(message)
 
 @ResponseStatus(HttpStatus.CONFLICT) // 409 - Or maybe 400 Bad Request?
-class BorrowingLimitExceededException(message: String) : RuntimeException(message)
+class BorrowingLimitExceededException(
+    message: String,
+) : RuntimeException(message)

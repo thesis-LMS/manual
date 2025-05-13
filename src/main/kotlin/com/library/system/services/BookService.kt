@@ -19,9 +19,8 @@ import java.util.UUID
 class BookService(
     private val bookRepository: BookRepository,
     private val userRepository: UserRepository,
-    private val borrowingRecordRepository: BorrowingRecordRepository
+    private val borrowingRecordRepository: BorrowingRecordRepository,
 ) {
-
     companion object {
         const val BORROWING_LIMIT: Long = 5
         const val LATE_FEE_PER_DAY: Double = 0.50
@@ -34,9 +33,7 @@ class BookService(
      * @return The saved book object with its generated ID.
      */
     @Transactional
-    fun addBook(book: Book): Book {
-        return bookRepository.save(book.copy(available = true))
-    }
+    fun addBook(book: Book): Book = bookRepository.save(book.copy(available = true))
 
     /**
      * Retrieves a book by its unique ID.
@@ -44,19 +41,16 @@ class BookService(
      * @return The found Book object.
      * @throws ResourceNotFoundException if no book with the given ID exists.
      */
-    fun getBookById(id: UUID): Book {
-        return bookRepository.findById(id).orElseThrow {
+    fun getBookById(id: UUID): Book =
+        bookRepository.findById(id).orElseThrow {
             ResourceNotFoundException("Book with ID $id not found")
         }
-    }
 
     /**
      * Retrieves all books currently in the repository.
      * @return A list of all Book objects.
      */
-    fun getAllBooks(): List<Book> {
-        return bookRepository.findAll()
-    }
+    fun getAllBooks(): List<Book> = bookRepository.findAll()
 
     /**
      * Updates an existing book's details.
@@ -66,7 +60,10 @@ class BookService(
      * @throws ResourceNotFoundException if no book with the given ID exists.
      */
     @Transactional
-    fun updateBook(id: UUID, updatedDetails: Book): Book {
+    fun updateBook(
+        id: UUID,
+        updatedDetails: Book,
+    ): Book {
         val existingBook = getBookById(id)
 
         existingBook.title = updatedDetails.title
@@ -98,8 +95,12 @@ class BookService(
      * @param available Optional availability status to filter by.
      * @return A list of books matching the criteria.
      */
-    fun searchBooks(title: String?, author: String?, available: Boolean?): List<Book> {
-        return when {
+    fun searchBooks(
+        title: String?,
+        author: String?,
+        available: Boolean?,
+    ): List<Book> =
+        when {
             title != null && author != null && available != null ->
                 bookRepository.findByTitleContainingIgnoreCaseAndAuthorContainingIgnoreCaseAndAvailable(title, author, available)
             title != null && author != null ->
@@ -117,7 +118,6 @@ class BookService(
             else ->
                 bookRepository.findAll()
         }
-    }
 
     /**
      * Allows a user to borrow an available book.
@@ -131,15 +131,19 @@ class BookService(
      * @throws BorrowingLimitExceededException if the user has reached their borrowing limit.
      */
     @Transactional
-    fun borrowBook(bookId: UUID, userId: UUID): Book {
+    fun borrowBook(
+        bookId: UUID,
+        userId: UUID,
+    ): Book {
         val book = getBookById(bookId)
         if (!book.available) {
             throw BookNotAvailableException("Book with ID $bookId is not available for borrowing.")
         }
 
-        val user = userRepository.findById(userId).orElseThrow {
-            ResourceNotFoundException("User with ID $userId not found for borrowing.")
-        }
+        val user =
+            userRepository.findById(userId).orElseThrow {
+                ResourceNotFoundException("User with ID $userId not found for borrowing.")
+            }
 
         val currentBorrows = borrowingRecordRepository.countByUserIdAndReturnDateIsNull(userId)
         if (currentBorrows >= BORROWING_LIMIT) {
@@ -152,14 +156,15 @@ class BookService(
         book.dueDate = dueDate
         val updatedBook = bookRepository.save(book)
 
-        val borrowingRecord = BorrowingRecord(
-            bookId = bookId,
-            userId = userId,
-            borrowDate = LocalDate.now(),
-            dueDate = dueDate,
-            returnDate = null,
-            lateFee = 0.0
-        )
+        val borrowingRecord =
+            BorrowingRecord(
+                bookId = bookId,
+                userId = userId,
+                borrowDate = LocalDate.now(),
+                dueDate = dueDate,
+                returnDate = null,
+                lateFee = 0.0,
+            )
         borrowingRecordRepository.save(borrowingRecord)
 
         return updatedBook
@@ -178,15 +183,16 @@ class BookService(
     fun returnBook(bookId: UUID): Book {
         val book = getBookById(bookId)
 
-        val borrowingRecord = borrowingRecordRepository.findByBookIdAndReturnDateIsNull(bookId)
-            .orElseThrow {
-                BookAlreadyReturnedException("Book with ID $bookId is already available or no active borrowing record found.")
-            }
+        val borrowingRecord =
+            borrowingRecordRepository
+                .findByBookIdAndReturnDateIsNull(bookId)
+                .orElseThrow {
+                    BookAlreadyReturnedException("Book with ID $bookId is already available or no active borrowing record found.")
+                }
 
         if (book.available || book.borrowedByUserId == null) {
             throw BookAlreadyReturnedException("Book with ID $bookId is marked available but has an active borrowing record.")
         }
-
 
         val returnDate = LocalDate.now()
         var lateFee = 0.0

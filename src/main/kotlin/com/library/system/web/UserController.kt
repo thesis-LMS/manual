@@ -15,9 +15,8 @@ import java.util.UUID
 @RestController
 @RequestMapping("/api/users")
 class UserController(
-    private val userService: UserService
+    private val userService: UserService,
 ) {
-
     /**
      * Handles POST requests to register a new user.
      * Endpoint: POST /api/users
@@ -27,9 +26,9 @@ class UserController(
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun registerUser(@Valid @RequestBody user: User): User {
-        return userService.registerUser(user)
-    }
+    fun registerUser(
+        @Valid @RequestBody user: User,
+    ): User = userService.registerUser(user)
 
     /**
      * Handles GET requests to retrieve a specific user by their ID.
@@ -40,9 +39,9 @@ class UserController(
      * Returns HTTP 404 (Not Found) if the user doesn't exist (handled by ResourceNotFoundException).
      */
     @GetMapping("/{id}")
-    fun getUserById(@PathVariable id: UUID): User {
-        return userService.getUserById(id)
-    }
+    fun getUserById(
+        @PathVariable id: UUID,
+    ): User = userService.getUserById(id)
 
     /**
      * Handles PUT requests to update an existing user.
@@ -54,7 +53,8 @@ class UserController(
      * Returns HTTP 404 (Not Found) if the user doesn't exist (handled by ResourceNotFoundException).
      */
     @PutMapping("/{id}")
-    fun updateUser(@PathVariable id: UUID, @Valid @RequestBody updatedDetails: User): User {
-        return userService.updateUser(id, updatedDetails)
-    }
+    fun updateUser(
+        @PathVariable id: UUID,
+        @Valid @RequestBody updatedDetails: User,
+    ): User = userService.updateUser(id, updatedDetails)
 }

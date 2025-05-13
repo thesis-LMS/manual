@@ -6,10 +6,8 @@ import org.springframework.stereotype.Repository
 import java.util.Optional
 import java.util.UUID
 
-
 @Repository
 interface BorrowingRecordRepository : JpaRepository<BorrowingRecord, UUID> {
-
     /**
      * Counts the number of active borrowing records (where returnDate is null) for a specific user.
      * Used to check borrowing limits.
